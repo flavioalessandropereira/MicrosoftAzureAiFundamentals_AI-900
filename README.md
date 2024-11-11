@@ -11,44 +11,50 @@
 
 ### Resolução do Projeto 1
 
-1. Ter uma conta no Microsoft Azure, caso não possua acessar clique [aqui](https://azure.microsoft.com).
-    ** link [Como criar um conta gratuita no Azure](https://www.youtube.com/watch?v=8aDA8dPY_rs) .
+# Previsão de Aluguéis de Bicicletas com Azure Machine Learning
 
+## Descrição
+Este projeto cria um modelo de machine learning automatizado no Azure para prever a quantidade de aluguéis de bicicletas em determinado dia.
 
-# Resolvendo Códigos em Python com o Github Copilot
+## Passo a Passo
 
-Olá! Aqui veremos algumas resoluções de códigos em python utilizando o Github Copilot.
+### 1. Configurar o Workspace no Azure
+1. No [Portal do Azure](https://portal.azure.com/), pesquise por **Machine Learning**.
+2. Crie um novo recurso e configure sua assinatura, grupo de recursos, nome do workspace e região.
+3. Clique em **Review + create** e depois em **Create**. Após criado, clique em **Launch studio**.
 
-### Atenção  ⚠
+### 2. Upload do Conjunto de Dados
+1. Baixe o conjunto de dados de [Bike Rentals](https://aka.ms/bike-rentals).
+2. No Azure Machine Learning Studio, vá para **Data** e faça o upload do arquivo, nomeando-o como `bike-rentals`.
 
-Não tem acesso ao Github Copilot?! Não tem problema!! Que tal utilizar o [ChatGPT](https://chat.openai.com/) como seu copiloto de estudos ??
+### 3. Treinar o Modelo
+1. No Azure Machine Learning Studio, vá para **Automated ML** e crie um novo experimento.
+2. Configure as opções:
+   - **Nome do experimento**: `mslearn-bike-rental`.
+   - **Tipo de tarefa**: `Regressão`.
+   - **Conjunto de dados**: `bike-rentals`.
+   - **Coluna de destino**: `alugueis`.
+   - **Modelos permitidos**: `RandomForest` e `LightGBM`.
+3. Clique em **Iniciar Experimento** e aguarde a conclusão.
 
-# 1 - Concatenando Dados 🎲
+### 4. Implantação do Modelo
+1. Selecione **Deploy** no melhor modelo e configure o endpoint:
+   - **Tipo de máquina virtual**: `Standard_DS3_v2`.
+   - **Contagem de instâncias**: `3`.
+   - **Nome do Endpoint**: `predict-rentals`.
+2. Aguarde até que a implantação tenha sucesso.
 
-Descrição: Vamos receber dois dados diferentes do usuário e concatena-los em uma única string ?!
+## Teste do Endpoint
+Para testar o modelo, insira o JSON abaixo na aba de **Teste** do endpoint no Azure Machine Learning Studio:
 
-O que aprenderemos?
-- Manipulação de Strings (string)
-- Concatenação
-- Entrada de Dados
-- Utilização eficiente do Github Copilot
-
-# 2 - Repetindo Textos ✏
-
-Descrição: Agora vamos solicitar uma string e um número inteiro como entrada. Depois iremos que retornar a string repetida o número de vezes informado.
-
-O que aprenderemos?
-- Manipulação de Strings (string)
-- Números inteiros (int)
-- Múltiplas repetições
-- Entrada de dados
-- Aproveitar as sugestões do Github Copilot
-
-# 3 - Operações Matemáticas Simples 📐
-
-Descrição: Vamos solicitar conom entrada dois números e depois vamos realizar uma operação simples entre eles.
-
-O que aprenderemos?
-- Operações Matemáticas Básicas
-- Entrada de Dados
-- Utilização eficiente do Github Copilot
+```json
+{
+  "input_data": {
+    "columns": [
+      "day", "mnth", "year", "season", "holiday", "weekday", "workingday",
+      "weathersit", "temp", "atemp", "hum", "windspeed"
+    ],
+    "index": [0],
+    "data": [[1, 1, 2022, 2, 0, 1, 1, 2, 0.3, 0.3, 0.3, 0.3]]
+  }
+}
